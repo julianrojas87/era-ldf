@@ -288,18 +288,16 @@ export const vehicleTypes = {
         "era:manufacturer": { "@type": "@id" },
         "era:trainDetectionSystem": { "@type": "@id" }
     },
-    graph: [
-        { // Query for all vehicle types
-            accept: 'text/turtle',
-            query: `
-            PREFIX era: <http://era.europa.eu/ns#>
-            CONSTRUCT WHERE {
-                ?s a era:VehicleType;
-                    ?p ?o.
-            }
-           `
+    graph: { // Query for all vehicle types
+        accept: 'text/turtle',
+        query: `
+        PREFIX era: <http://era.europa.eu/ns#>
+        CONSTRUCT WHERE {
+            ?s a era:VehicleType;
+                ?p ?o.
         }
-    ]
+        `
+    }
 };
 
 export const vehicleInstances = {
@@ -309,25 +307,23 @@ export const vehicleInstances = {
         era: "http://era.europa.eu/ns#",
         "era-vehicles": "http://era.europa.eu/concepts/vehicles#"
     },
-    graph: [
-        { // Query for all vehicle types
-            accept: 'text/turtle',
-            query: `
-            PREFIX era: <http://era.europa.eu/ns#>
-            CONSTRUCT {
-                ?s a era:Vehicle;
-                    era:vehicleSeries ?vs;
-                    era:vehicleType ?vt;
-                    era:operationalRestriction ?or;
-                    era:quieterRoutesExemptedCountry ?ec.
-            } WHERE {
-                ?s a era:Vehicle;
-                    era:vehicleSeries ?vs;
-                    era:vehicleType ?vt.
-                OPTIONAL { ?s era:operationalRestriction ?or }
-                OPTIONAL { ?s era:quieterRoutesExemptedCountry ?ec }
-            }
-           `
+    graph: { // Query for all vehicle types
+        accept: 'text/turtle',
+        query: `
+        PREFIX era: <http://era.europa.eu/ns#>
+        CONSTRUCT {
+            ?s a era:Vehicle;
+                era:vehicleSeries ?vs;
+                era:vehicleType ?vt;
+                era:operationalRestriction ?or;
+                era:quieterRoutesExemptedCountry ?ec.
+        } WHERE {
+            ?s a era:Vehicle;
+                era:vehicleSeries ?vs.
+            OPTIONAL { ?s era:vehicleType ?vt }
+            OPTIONAL { ?s era:operationalRestriction ?or }
+            OPTIONAL { ?s era:quieterRoutesExemptedCountry ?ec }
         }
-    ]
+        `
+    }
 };
