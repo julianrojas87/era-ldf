@@ -27,6 +27,7 @@ export const vocab = {
         { // Query for needed taxonomies in visualization. Used UNION as it improves the performance 
             accept: 'application/n-triples',
             query: `
+                PREFIX owl: <http://www.w3.org/2002/07/owl#>
                 PREFIX era: <http://era.europa.eu/ns#>
                 PREFIX era-op-types: <http://era.europa.eu/concepts/op-types#>
                 PREFIX era-vehicles: <http://era.europa.eu/concepts/vehicles#>
@@ -39,11 +40,11 @@ export const vocab = {
                 PREFIX era-csm: <http://era.europa.eu/concepts/contact-strip-materials#>
 
                 CONSTRUCT {
+                    ?term ?termp ?termo.
                     ?opt ?optp ?opto.
                     ?vc ?vcp ?vco.
                     ?vsc ?vscp ?vsco.
                     ?mnf ?mnfp ?mnfo.
-                    ?term ?termp ?termo.
                     ?gg ?ggp ?ggo.
                     ?tds ?tdsp ?tdso.
                     ?hab ?habp ?habo.
@@ -51,6 +52,12 @@ export const vocab = {
                     ?ess ?essp ?esso.
                     ?csm ?csmp ?csmo.
                 } WHERE {
+                    {   
+                        VALUES ?class {owl:ObjectProperty owl:DatatypeProperty}.
+                        ?term a ?class;
+                            ?termp ?termo.
+                    }
+                    UNION
                     {
                         ?opt a era-op-types:OperationalPointType;
                             ?optp ?opto.
@@ -69,11 +76,6 @@ export const vocab = {
                     {
                         ?mnf a era-manufacturers:Manufacturer;
                             ?mnfp ?mnfo.
-                    }
-                    UNION
-                    {
-                        ?term a rdf:Property;
-                            ?termp ?termo.
                     }
                     UNION
                     {
