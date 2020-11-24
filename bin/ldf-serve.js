@@ -8,7 +8,7 @@ import { sparqlTiles } from '../lib/routes/sparql-tiles.js';
 import { vocabulary } from '../lib/routes/vocabulary.js';
 import { vehicles } from '../lib/routes/vehicles.js'; 
 
-const server = fastify();
+const server = fastify({ logger: true });
 
 server.register(sparqlTiles);
 server.register(vocabulary);
