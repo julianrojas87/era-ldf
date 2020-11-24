@@ -277,7 +277,6 @@ export const vehicleTypes = {
         rdfs: "http://www.w3.org/2000/01/rdf-schema#",
         era: "http://era.europa.eu/ns#",
         "era-vehicles": "http://era.europa.eu/concepts/vehicles#",
-        "era-countries": "http://era.europa.eu/concepts/countries#",
         "era-tds": "http://era.europa.eu/concepts/train-detection#",
         "era-gaugings": "http://era.europa.eu/concepts/gaugings#",
         "era-rs-fire": "http://era.europa.eu/concepts/rs-fire#",
@@ -297,6 +296,36 @@ export const vehicleTypes = {
             CONSTRUCT WHERE {
                 ?s a era:VehicleType;
                     ?p ?o.
+            }
+           `
+        }
+    ]
+};
+
+export const vehicleInstances = {
+    '@context': {
+        xsd: "http://www.w3.org/2001/XMLSchema#",
+        rdfs: "http://www.w3.org/2000/01/rdf-schema#",
+        era: "http://era.europa.eu/ns#",
+        "era-vehicles": "http://era.europa.eu/concepts/vehicles#"
+    },
+    graph: [
+        { // Query for all vehicle types
+            accept: 'text/turtle',
+            query: `
+            PREFIX era: <http://era.europa.eu/ns#>
+            CONSTRUCT {
+                ?s a era:Vehicle;
+                    era:vehicleSeries ?vs;
+                    era:vehicleType ?vt;
+                    era:operationalRestriction ?or;
+                    era:quieterRoutesExemptedCountry ?ec.
+            } WHERE {
+                ?s a era:Vehicle;
+                    era:vehicleSeries ?vs;
+                    era:vehicleType ?vt.
+                OPTIONAL { ?s era:operationalRestriction ?or }
+                OPTIONAL { ?s era:quieterRoutesExemptedCountry ?ec }
             }
            `
         }
