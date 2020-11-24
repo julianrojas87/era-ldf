@@ -24,7 +24,7 @@ export const vocab = {
         "skos:broader": { "@type": "@id" }
     },
     graph: [
-        { // Query for needed taxonomies in visualization. Used UNION as it improves the performance 
+        { // Query for vocabulary predicates and needed taxonomies in visualization. Used UNION as it improves the performance 
             accept: 'application/n-triples',
             query: `
                 PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -289,14 +289,16 @@ export const vehicleTypes = {
         "era:manufacturer": { "@type": "@id" },
         "era:trainDetectionSystem": { "@type": "@id" }
     },
-    graph: { // Query for all vehicle types
-        accept: 'text/turtle',
-        query: `
+    graph: [
+        { // Query for all vehicle types
+            accept: 'text/turtle',
+            query: `
             PREFIX era: <http://era.europa.eu/ns#>
             CONSTRUCT WHERE {
                 ?s a era:VehicleType;
                     ?p ?o.
             }
-       `
-    }
+           `
+        }
+    ]
 };
