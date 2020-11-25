@@ -328,13 +328,12 @@ export const vehicleInstances = {
             {
                 ?s a era:Vehicle;
                     era:vehicleNumber ?vn;
-                    era:vehicleSeries ?vs.
-                OPTIONAL { ?s era:vehicleType ?vt }
+                    era:vehicleSeries ?vs;
+                    era:vehicleType ?vt.
                 OPTIONAL { ?s era:operationalRestriction ?or }
                 OPTIONAL { ?s era:quieterRoutesExemptedCountry ?ec }   
             }
         }
-        LIMIT 10000
         `
     }
 };
