@@ -334,6 +334,7 @@ export const vehicleInstances = {
                 OPTIONAL { ?s era:quieterRoutesExemptedCountry ?ec }   
             }
         }
+        LIMIT 10000
         `
     }
 };
