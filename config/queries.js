@@ -311,20 +311,9 @@ export const vehicleInstances = {
         accept: 'text/turtle',
         query: `
         PREFIX era: <http://era.europa.eu/ns#>
-        CONSTRUCT {
+        CONSTRUCT WHERE {
             ?s a era:Vehicle;
-                era:vehicleNumber ?vn;
-                era:vehicleSeries ?vs;
-                era:vehicleType ?vt;
-                era:operationalRestriction ?or;
-                era:quieterRoutesExemptedCountry ?ec.
-        } WHERE {
-            ?s a era:Vehicle;
-                era:vehicleNumber ?vn;
-                era:vehicleSeries ?vs.
-            OPTIONAL { ?s era:vehicleType ?vt }
-            OPTIONAL { ?s era:operationalRestriction ?or }
-            OPTIONAL { ?s era:quieterRoutesExemptedCountry ?ec }
+                ?p ?o.
         }
         `
     }
