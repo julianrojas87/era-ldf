@@ -321,14 +321,18 @@ export const vehicleInstances = {
                 era:operationalRestriction ?or;
                 era:quieterRoutesExemptedCountry ?ec.
         } WHERE {
-            <http://era.europa.eu/implementation#V_238029424542> ?p1 ?o1.
-            <http://era.europa.eu/implementation#V_278043638529> ?p2 ?o2.
-            ?s a era:Vehicle;
-                era:vehicleNumber ?vn;
-                era:vehicleSeries ?vs.
-            OPTIONAL { ?s era:vehicleType ?vt }
-            OPTIONAL { ?s era:operationalRestriction ?or }
-            OPTIONAL { ?s era:quieterRoutesExemptedCountry ?ec }
+            { <http://era.europa.eu/implementation#V_238029424542> ?p1 ?o1 }
+            UNION
+            { <http://era.europa.eu/implementation#V_278043638529> ?p2 ?o2 }
+            UNION
+            {
+                ?s a era:Vehicle;
+                    era:vehicleNumber ?vn;
+                    era:vehicleSeries ?vs.
+                OPTIONAL { ?s era:vehicleType ?vt }
+                OPTIONAL { ?s era:operationalRestriction ?or }
+                OPTIONAL { ?s era:quieterRoutesExemptedCountry ?ec }   
+            }
         }
         `
     }
