@@ -38,6 +38,7 @@ export const vocab = {
                 PREFIX era-ri: <http://era.europa.eu/concepts/rail-inclinations#>
                 PREFIX era-ess: <http://era.europa.eu/concepts/energy-supply-systems#>
                 PREFIX era-csm: <http://era.europa.eu/concepts/contact-strip-materials#>
+                PREFIX era-rc: <http://era.europa.eu/concepts/restrictions#>
 
                 CONSTRUCT {
                     ?term ?termp ?termo.
@@ -51,6 +52,7 @@ export const vocab = {
                     ?ri ?rip ?rio.
                     ?ess ?essp ?esso.
                     ?csm ?csmp ?csmo.
+                    ?rest ?restp ?resto.
                 } WHERE {
                     {   
                         VALUES ?class {owl:ObjectProperty owl:DatatypeProperty}.
@@ -106,6 +108,11 @@ export const vocab = {
                     {
                         ?csm a era-csm:ContactStripMaterial;
                             ?csmp ?csmo.
+                    }
+                    UNION
+                    {
+                        ?rest a era-rc:Restriction;
+                            ?restp ?resto.
                     }
                 }
            `
