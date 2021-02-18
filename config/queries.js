@@ -233,11 +233,12 @@ export const abstractionTiles = {
                     
                     ?mna ?mnap ?mnao.
                     
-                    ?startLink era:startPort ?np;
-                        era:endPort ?enp;
-                        ?startLinkp ?startLinko.
-                    
-                    ?enp ?enpp ?enpo.
+                    OPTIONAL {
+                        ?startLink era:startPort ?np;
+                            era:endPort ?enp;
+                            ?startLinkp ?startLinko.
+                        ?enp ?enpp ?enpo.
+                    }
                     
                     FILTER(?long >= ${lon1} && ?long <= ${lon2})
                     FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
