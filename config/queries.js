@@ -237,7 +237,6 @@ export const abstractionTiles = {
                         ?startLink era:startPort ?np;
                             era:endPort ?enp;
                             ?startLinkp ?startLinko.
-                    
                         ?enp ?enpp ?enpo.
                     }
                     
