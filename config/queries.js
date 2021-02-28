@@ -246,7 +246,7 @@ export const abstractionTiles = {
             `;
             }
         },
-        {
+        {   // Extra query to get related incoming micro links that are bidirectional 
             accept: 'application/n-triples',
             query: (lat1, lon1, lat2, lon2) => {
                 return `
