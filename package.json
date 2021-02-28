@@ -1,7 +1,7 @@
 {
   "name": "era-ldf",
   "type": "module",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "description": "Node.js application to create LDF from ERA's KG",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,8 +9,7 @@
   "keywords": [
     "railway",
     "tiles",
-    "linked",
-    "data"
+    "linked data"
   ],
   "author": "Julian Rojas",
   "license": "MIT",
