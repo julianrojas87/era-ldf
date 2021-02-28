@@ -237,7 +237,6 @@ export const abstractionTiles = {
                         ?startLink era:startPort ?np;
                             era:endPort ?enp;
                             ?startLinkp ?startLinko.
-                    
                         ?enp ?enpp ?enpo.
                     }
                     
@@ -247,7 +246,7 @@ export const abstractionTiles = {
             `;
             }
         },
-        {
+        {   // Extra query to get related incoming micro links that are bidirectional 
             accept: 'application/n-triples',
             query: (lat1, lon1, lat2, lon2) => {
                 return `
