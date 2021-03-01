@@ -214,7 +214,7 @@ export const abstractionTiles = {
         "era:endPort": { "@type": "@id" }
     },
     graph: [
-        { // Query for all node ports, micro nodes, micro links and internal links in given bbox
+        { // Query for all node ports in given bbox
             accept: 'application/n-triples',
             query: (lat1, lon1, lat2, lon2) => {
                 return `
@@ -223,8 +223,6 @@ export const abstractionTiles = {
                 CONSTRUCT {
                     ?np ?npp ?npo.
                     ?mna ?mnap ?mnao.
-                    ?startLink ?startLinkp ?startLinko.
-                    ?enp ?enpp ?enpo.
                 } WHERE {
                     ?np era:belongsToNode ?mna;
                         wgs:latitude ?lat;
@@ -233,12 +231,30 @@ export const abstractionTiles = {
                     
                     ?mna ?mnap ?mnao.
                     
-                    OPTIONAL {
-                        ?startLink era:startPort ?np;
-                            era:endPort ?enp;
-                            ?startLinkp ?startLinko.
-                        ?enp ?enpp ?enpo.
-                    }
+                    FILTER(?long >= ${lon1} && ?long <= ${lon2})
+                    FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
+                }
+            `;
+            }
+        },
+        { // Query for all departing micro links and internal links in given bbox
+            accept: 'application/n-triples',
+            query: (lat1, lon1, lat2, lon2) => {
+                return `
+                PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+                PREFIX era: <http://era.europa.eu/ns#>
+                CONSTRUCT {
+                    ?startLink ?startLinkp ?startLinko.
+                    ?enp ?enpp ?enpo.
+                } WHERE {
+                    ?startLink era:startPort ?np;
+                        era:endPort ?enp;
+                        ?startLinkp ?startLinko.
+                    ?enp ?enpp ?enpo.
+
+                    ?np wgs:latitude ?lat;
+                        wgs:longitude ?long.
+                    
                     
                     FILTER(?long >= ${lon1} && ?long <= ${lon2})
                     FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
@@ -246,7 +262,7 @@ export const abstractionTiles = {
             `;
             }
         },
-        {   // Extra query to get related incoming micro links that are bidirectional 
+        {   // Query to get related incoming micro links that are bidirectional 
             accept: 'application/n-triples',
             query: (lat1, lon1, lat2, lon2) => {
                 return `
