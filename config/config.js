@@ -30,11 +30,5 @@ export const config = {
             //"default-graph-uri": 'https://test-linked.ec-dataplatform.eu/era' // Named graph needed for Virtuoso TEST env
         }
     },
-    mimeTypes: [
-        'text/turtle',
-        'application/ld+json',
-        'application/n-quads',
-        'application/n-triples'
-    ],
     logLevel: 'debug'
 };
