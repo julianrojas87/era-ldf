@@ -8,17 +8,26 @@ This application has been _dockerized_ to facilitate its deployment. We use [`do
 To deploy follow these steps:
 
 1. Make sure to have a recent version of [Docker](https://docs.docker.com/engine/install/) installed.
-2. Set the environment configuration parameters in the [`.env`](https://github.com/julianrojas87/era-ldf/blob/main/.env) file:
-```
-NGINX_PORT=8080 # TCP port where NGINX will receive HTTP connections
-ERA_LDF_PORT=3000 # TCP port where the application will receive HTTP connections
-BASE_URL_PATH=ldf # Base path for the API URL. E.g. http://localhost:3000/ldf/... 
-SPARQL_ENDPOINT=https://linked.ec-dataplatform.eu/sparql # Remote SPARQL endpoint hosting the KG
-TILE_BASE_URI=http://era.ilabt.imec.be/ldf/sparql-tiles # Base URI for identifying each tile
-CACHE_MAX_AGE=2592000 # Time in seconds that determines the max age a tile will be cached
-ERA_NAMED_GRAPH=https://linked.ec-dataplatform.eu/era # Named graph ID
-```
 
+2. Set the environment configuration parameters in the [`.env`](https://github.com/julianrojas87/era-ldf/blob/main/.env) file:
+
+   ```yaml
+   NGINX_PORT=8080 # TCP port where NGINX will receive HTTP connections
+   
+   ERA_LDF_PORT=3000 # TCP port where the application will receive HTTP connections
+   
+   BASE_URL_PATH=ldf # Base path for the API URL. E.g. http://localhost:3000/ldf/... 
+   
+   SPARQL_ENDPOINT=https://linked.ec-dataplatform.eu/sparql # Remote SPARQL endpoint hosting the KG
+   
+   TILE_BASE_URI=http://era.ilabt.imec.be/ldf/sparql-tiles # Base URI for identifying each tile
+   
+   CACHE_MAX_AGE=2592000 # Time in seconds that determines the max age a tile will be cached
+   
+   ERA_NAMED_GRAPH=https://linked.ec-dataplatform.eu/era # Named graph ID
+   ```
+
+   
 3. Build and run the docker containers:
 
    ```bash
