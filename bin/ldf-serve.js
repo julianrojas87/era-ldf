@@ -17,10 +17,10 @@ server.register(sparqlTiles);
 server.register(vocabulary);
 server.register(vehicles);
 
-server.listen(config.port, (err, address) => {
+server.listen(config.port, '0.0.0.0', (err, address) => {
     if (err) {
         server.log.error(err)
         process.exit(1)
     }
-    server.log.info(`server listening on ${address}`)
+    console.log(`server listening on ${address}`);
 });

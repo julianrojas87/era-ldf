@@ -1,0 +1,19 @@
+version: "3"
+services:
+  nginx:
+    build: ./nginx
+    links: 
+      - era-ldf:era-ldf
+    ports: 
+      - "${NGINX_PORT}:80"
+  era-ldf:
+    build: ./
+    ports:
+      - "${ERA_LDF_PORT}:3000"
+    restart: unless-stopped
+    environment: 
+      - BASE_URL_PATH=${BASE_URL_PATH}
+      - SPARQL_ENDPOINT=${SPARQL_ENDPOINT}
+      - TILE_BASE_URI=${TILE_BASE_URI}
+      - CACHE_MAX_AGE=${CACHE_MAX_AGE}
+      - ERA_NAMED_GRAPH=${ERA_NAMED_GRAPH}
