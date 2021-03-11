@@ -156,8 +156,8 @@ export const implementationTiles = {
                         wgs:location ?l;
                         ?mntop ?mntoo.
                     
-                    ?l wgs:latitude ?lat;
-                        wgs:longitude ?long;
+                    ?l wgs:lat ?lat;
+                        wgs:long ?long;
                         ?lp ?lo.
                     
                     FILTER(?long >= ${lon1} && ?long <= ${lon2})
@@ -175,8 +175,8 @@ export const implementationTiles = {
                 CONSTRUCT {
                     ?tr ?trp ?tro.
                 } WHERE {
-                    ?np wgs:latitude ?lat;
-                        wgs:longitude ?long.
+                    ?np wgs:lat ?lat;
+                        wgs:long ?long.
                     
                     ?link a era:MicroLink;
                         era:startPort ?np;
@@ -225,8 +225,8 @@ export const abstractionTiles = {
                     ?mna ?mnap ?mnao.
                 } WHERE {
                     ?np era:belongsToNode ?mna;
-                        wgs:latitude ?lat;
-                        wgs:longitude ?long;
+                        wgs:lat ?lat;
+                        wgs:long ?long;
                         ?npp ?npo.
                     
                     ?mna ?mnap ?mnao.
@@ -252,8 +252,8 @@ export const abstractionTiles = {
                         ?startLinkp ?startLinko.
                     ?enp ?enpp ?enpo.
 
-                    ?np wgs:latitude ?lat;
-                        wgs:longitude ?long.
+                    ?np wgs:lat ?lat;
+                        wgs:long ?long.
                     
                     
                     FILTER(?long >= ${lon1} && ?long <= ${lon2})
@@ -274,8 +274,8 @@ export const abstractionTiles = {
                     ?stp ?stpp ?stpo.
                 } WHERE {
                     ?np era:belongsToNode ?mna;
-                        wgs:latitude ?lat;
-                        wgs:longitude ?long.
+                        wgs:lat ?lat;
+                        wgs:long ?long.
                         
                     ?mna ?mnap ?mnao.
 
