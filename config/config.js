@@ -8,7 +8,8 @@ export const config = {
     port: 3000,
     //sparql: 'http://era.ilabt.imec.be/repositories/ERA-KG', // GraphDB
     //sparql: 'https://test-linked.ec-dataplatform.eu/sparql', // Virtuoso (TEST env)
-    sparql: '${SPARQL_ENDPOINT}', // Virtuoso (PROD env)
+    //sparql: 'https://linked.ec-dataplatform.eu/sparql' // Virtuoso (PROD env)
+    sparql: '${SPARQL_ENDPOINT}', 
     sparqlTileBaseURI: '${TILE_BASE_URI}',
     concurrentQueries: true,
     responseHeaders: {
