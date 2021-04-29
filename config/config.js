@@ -8,14 +8,14 @@ export const config = {
     port: 3000,
     //sparql: 'http://era.ilabt.imec.be/repositories/ERA-KG', // GraphDB
     //sparql: 'https://test-linked.ec-dataplatform.eu/sparql', // Virtuoso (TEST env)
-    //sparql: 'https://linked.ec-dataplatform.eu/sparql' // Virtuoso (PROD env)
+    //sparql: 'https://linked.ec-dataplatform.eu/sparql', // Virtuoso (PROD env)
     sparql: '${SPARQL_ENDPOINT}', 
     sparqlTileBaseURI: '${TILE_BASE_URI}',
     concurrentQueries: true,
     responseHeaders: {
         'Access-Control-Allow-Origin': '*',
         'Vary': 'Accept',
-        'Cache-Control': 'public, max-age=${CACHE_MAX_AGE}' // Cache for 30 days
+        'Cache-Control': 'public, max-age=${CACHE_MAX_AGE}' // Cache for CACHE_MAX_AGE days
     },
     sparqlQueryConfig: {
         headers: {
@@ -27,8 +27,8 @@ export const config = {
         options: {
             infer: false,
             timeout: 0,
-            "default-graph-uri": '${ERA_NAMED_GRAPH}' // Named graph needed for Virtuoso PROD env
-            //"default-graph-uri": 'https://test-linked.ec-dataplatform.eu/era' // Named graph needed for Virtuoso TEST env
+            "default-graph-uri": '${ERA_NAMED_GRAPH}' 
+            //"default-graph-uri": 'https://linked.ec-dataplatform.eu/era' // Named graph needed for Virtuoso PROD env
         }
     },
     logLevel: 'info'
