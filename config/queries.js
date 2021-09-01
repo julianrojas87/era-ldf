@@ -3,134 +3,17 @@
  * Ghent University - imec - IDLab
  */
 
-export const vocab = {
-    '@context': {
-        xsd: "http://www.w3.org/2001/XMLSchema#",
-        rdfs: "http://www.w3.org/2000/01/rdf-schema#",
-        skos: "http://www.w3.org/2004/02/skos/core#",
-        era: "http://era.europa.eu/ns#",
-        "era-op-types": "http://era.europa.eu/concepts/op-types#",
-        "era-vehicles": "http://era.europa.eu/concepts/vehicles#",
-        "era-tds": "http://era.europa.eu/concepts/train-detection#",
-        "era-gaugings": "http://era.europa.eu/concepts/gaugings#",
-        "era-am": "http://era.europa.eu/concepts/axle-monitoring#",
-        "era-ri": "http://era.europa.eu/concepts/rail-inclinations#",
-        "era-ess": "http://era.europa.eu/concepts/energy-supply-systems#",
-        "era-csm": "http://era.europa.eu/concepts/contact-strip-materials#",
-        "era-rsf": "http://era.europa.eu/concepts/rolling-stock-fire#",
-        "era-manufacturers": "http://era.europa.eu/concepts/manufacturers#",
-        "eu-country": "http://publications.europa.eu/resource/authority/country/",
-        "rdfs:subClassOf": { "@type": "@id" },
-        "skos:broader": { "@type": "@id" }
-    },
-    graph: [
-        { // Query for vocabulary predicates and needed taxonomies in visualization. Used UNION as it improves the performance 
-            accept: 'application/n-triples',
-            query: `
-                PREFIX owl: <http://www.w3.org/2002/07/owl#>
-                PREFIX era: <http://era.europa.eu/ns#>
-                PREFIX era-op-types: <http://era.europa.eu/concepts/op-types#>
-                PREFIX era-vehicles: <http://era.europa.eu/concepts/vehicles#>
-                PREFIX era-manufacturers: <http://era.europa.eu/concepts/manufacturers#>
-                PREFIX era-gaugings: <http://era.europa.eu/concepts/gaugings#>
-                PREFIX era-tds: <http://era.europa.eu/concepts/train-detection#>
-                PREFIX era-am: <http://era.europa.eu/concepts/axle-monitoring#>
-                PREFIX era-ri: <http://era.europa.eu/concepts/rail-inclinations#>
-                PREFIX era-ess: <http://era.europa.eu/concepts/energy-supply-systems#>
-                PREFIX era-csm: <http://era.europa.eu/concepts/contact-strip-materials#>
-                PREFIX era-rc: <http://era.europa.eu/concepts/restrictions#>
-
-                CONSTRUCT {
-                    ?term ?termp ?termo.
-                    ?opt ?optp ?opto.
-                    ?vc ?vcp ?vco.
-                    ?vsc ?vscp ?vsco.
-                    ?mnf ?mnfp ?mnfo.
-                    ?gg ?ggp ?ggo.
-                    ?tds ?tdsp ?tdso.
-                    ?hab ?habp ?habo.
-                    ?ri ?rip ?rio.
-                    ?ess ?essp ?esso.
-                    ?csm ?csmp ?csmo.
-                    ?rest ?restp ?resto.
-                } WHERE {
-                    {   
-                        VALUES ?class {owl:ObjectProperty owl:DatatypeProperty}.
-                        ?term a ?class;
-                            ?termp ?termo.
-                    }
-                    UNION
-                    {
-                        ?opt a era-op-types:OperationalPointType;
-                            ?optp ?opto.
-                    }
-                    UNION
-                    {
-                        ?vc a era-vehicles:Category;
-                            ?vcp ?vco.
-                    }
-                    UNION
-                    {
-                        ?vsc a era-vehicles:SubCategory;
-                            ?vscp ?vsco.
-                    }
-                    UNION
-                    {
-                        ?mnf a era-manufacturers:Manufacturer;
-                            ?mnfp ?mnfo.
-                    }
-                    UNION
-                    {
-                        ?gg a era-gaugings:GaugingProfile;
-                            ?ggp ?ggo.
-                    }
-                    UNION
-                    {
-                        ?tds a era-tds:TrainDetectionSystem;
-                            ?tdsp ?tdso.
-                    }
-                    UNION
-                    {
-                        ?hab a era-am:AxleBearingMonitoring;
-                            ?habp ?habo.
-                    }
-                    UNION
-                    {
-                        ?ri a era-ri:RailInclination;
-                            ?rip ?rio.
-                    }
-                    UNION
-                    {
-                        ?ess a era-ess:EnergySupplySystem;
-                            ?essp ?esso.
-                    }
-                    UNION
-                    {
-                        ?csm a era-csm:ContactStripMaterial;
-                            ?csmp ?csmo.
-                    }
-                    UNION
-                    {
-                        ?rest a era-rc:Restriction;
-                            ?restp ?resto.
-                    }
-                }
-           `
-        }
-    ]
-}
-
 export const implementationTiles = {
     '@context': {
         xsd: "http://www.w3.org/2001/XMLSchema#",
         rdfs: "http://www.w3.org/2000/01/rdf-schema#",
-        era: "http://era.europa.eu/ns#",
+        era: "http://data.europa.eu/949/",
         wgs: "http://www.w3.org/2003/01/geo/wgs84_pos#",
         geosparql: "http://www.opengis.net/ont/geosparql#",
         tiles: "https://w3id.org/tree/terms#",
         hydra: "http://www.w3.org/ns/hydra/core#",
         dcterms: "http://purl.org/dc/terms/",
-        "era-op-types": "http://era.europa.eu/concepts/op-types#",
+        "era-op-types": "http://data.europa.eu/949/concepts/op-types#",
         "eu-country": "http://publications.europa.eu/resource/authority/country/",
         "dcterms:license": { "@type": "@id" },
         "hydra:variableRepresentation": { "@type": "@id" },
@@ -146,7 +29,7 @@ export const implementationTiles = {
             accept: 'application/n-triples',
             query: (lat1, lon1, lat2, lon2) => {
                 return `
-                PREFIX era: <http://era.europa.eu/ns#>
+                PREFIX era: <http://data.europa.eu/949/>
                 PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
                 CONSTRUCT {
                     ?mnto ?mntop ?mntoo.
@@ -170,7 +53,7 @@ export const implementationTiles = {
             accept: 'application/n-triples',
             query: (lat1, lon1, lat2, lon2) => {
                 return `
-                PREFIX era: <http://era.europa.eu/ns#>
+                PREFIX era: <http://data.europa.eu/949/>
                 PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
                 CONSTRUCT {
                     ?tr ?trp ?tro.
@@ -197,7 +80,7 @@ export const abstractionTiles = {
     '@context': {
         xsd: "http://www.w3.org/2001/XMLSchema#",
         rdfs: "http://www.w3.org/2000/01/rdf-schema#",
-        era: "http://era.europa.eu/ns#",
+        era: "http://data.europa.eu/949/",
         wgs: "http://www.w3.org/2003/01/geo/wgs84_pos#",
         geosparql: "http://www.opengis.net/ont/geosparql#",
         tiles: "https://w3id.org/tree/terms#",
@@ -219,7 +102,7 @@ export const abstractionTiles = {
             query: (lat1, lon1, lat2, lon2) => {
                 return `
                 PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
-                PREFIX era: <http://era.europa.eu/ns#>
+                PREFIX era: <http://data.europa.eu/949/>
                 CONSTRUCT {
                     ?np ?npp ?npo.
                     ?mna ?mnap ?mnao.
@@ -242,7 +125,7 @@ export const abstractionTiles = {
             query: (lat1, lon1, lat2, lon2) => {
                 return `
                 PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
-                PREFIX era: <http://era.europa.eu/ns#>
+                PREFIX era: <http://data.europa.eu/949/>
                 CONSTRUCT {
                     ?startLink ?startLinkp ?startLinko.
                     ?enp ?enpp ?enpo.
@@ -267,7 +150,7 @@ export const abstractionTiles = {
             query: (lat1, lon1, lat2, lon2) => {
                 return `
                 PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
-                PREFIX era: <http://era.europa.eu/ns#>
+                PREFIX era: <http://data.europa.eu/949/>
                 CONSTRUCT {
                     ?mna ?mnap ?mnao.
                     ?endLink ?endLinkp ?endLinko.
@@ -299,12 +182,12 @@ export const vehicleTypes = {
     '@context': {
         xsd: "http://www.w3.org/2001/XMLSchema#",
         rdfs: "http://www.w3.org/2000/01/rdf-schema#",
-        era: "http://era.europa.eu/ns#",
-        "era-vehicles": "http://era.europa.eu/concepts/vehicles#",
-        "era-tds": "http://era.europa.eu/concepts/train-detection#",
-        "era-gaugings": "http://era.europa.eu/concepts/gaugings#",
-        "era-rs-fire": "http://era.europa.eu/concepts/rs-fire#",
-        "era-manufacturers": "http://era.europa.eu/concepts/manufacturers#",
+        era: "http://data.europa.eu/949/",
+        "era-vehicles": "http://data.europa.eu/949/concepts/vehicles#",
+        "era-tds": "http://data.europa.eu/949/concepts/train-detection#",
+        "era-gaugings": "http://data.europa.eu/949/concepts/gaugings#",
+        "era-rs-fire": "http://data.europa.eu/949/concepts/rs-fire#",
+        "era-manufacturers": "http://data.europa.eu/949/concepts/manufacturers#",
         "era:category": { "@type": "@id" },
         "era:subCategory": { "@type": "@id" },
         "era:country": { "@type": "@id" },
@@ -315,48 +198,10 @@ export const vehicleTypes = {
     graph: { // Query for all vehicle types
         accept: 'text/turtle',
         query: `
-        PREFIX era: <http://era.europa.eu/ns#>
+        PREFIX era: <http://data.europa.eu/949/>
         CONSTRUCT WHERE {
             ?s a era:VehicleType;
                 ?p ?o.
-        }
-        `
-    }
-};
-
-export const vehicleInstances = {
-    '@context': {
-        xsd: "http://www.w3.org/2001/XMLSchema#",
-        rdfs: "http://www.w3.org/2000/01/rdf-schema#",
-        era: "http://era.europa.eu/ns#",
-        "era-vehicles": "http://era.europa.eu/concepts/vehicles#"
-    },
-    graph: { // Query for all vehicle types
-        accept: 'text/turtle',
-        query: `
-        PREFIX era: <http://era.europa.eu/ns#>
-        CONSTRUCT {
-            <http://era.europa.eu/implementation#V_238029424542> ?p1 ?o1.
-            <http://era.europa.eu/implementation#V_278043638529> ?p2 ?o2.
-            ?s a era:Vehicle;
-                era:vehicleNumber ?vn;
-                era:vehicleSeries ?vs;
-                era:vehicleType ?vt;
-                era:operationalRestriction ?or;
-                era:quieterRoutesExemptedCountry ?ec.
-        } WHERE {
-            { <http://era.europa.eu/implementation#V_238029424542> ?p1 ?o1 }
-            UNION
-            { <http://era.europa.eu/implementation#V_278043638529> ?p2 ?o2 }
-            UNION
-            {
-                ?s a era:Vehicle;
-                    era:vehicleNumber ?vn;
-                    era:vehicleSeries ?vs;
-                    era:vehicleType ?vt.
-                OPTIONAL { ?s era:operationalRestriction ?or }
-                OPTIONAL { ?s era:quieterRoutesExemptedCountry ?ec }   
-            }
         }
         `
     }
