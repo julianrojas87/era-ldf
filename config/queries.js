@@ -49,7 +49,7 @@ export const implementationTiles = {
             `;
             }
         },
-        { // Query for all SoLs in given bbox
+        { // Query for all SoLs and Tracks in given bbox
             accept: 'application/n-triples',
             query: (lat1, lon1, lat2, lon2) => {
                 return `
@@ -57,25 +57,20 @@ export const implementationTiles = {
                 PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
                 CONSTRUCT {
                     ?sol ?solp ?solo.
+                    ?track ?trackp ?tracko.
                 } WHERE {
-                    ?nesol a era:NetElement;
-                        era:hasImplementation ?sol.
-                    
-                    ?neop a era:NetElement;
-                        era:hasImplementation ?op.
-
                     ?sol a era:SectionOfLine;
+                        era:opStart ?op;
+                        era:track ?track;
                         ?solp ?solo.
-                    
+
+                    ?track ?trackp ?tracko.
+
                     ?op a era:OperationalPoint;
                         wgs:location ?l.
-                    
-                    ?nr a era:NetRelation;
-                        era:elementA ?neop;
-                        era:elementB ?nesol.
-                    
+
                     ?l wgs:lat ?lat;
-                        wgs:long ?long.
+                    wgs:long ?long.
                     
                     FILTER(?long >= ${lon1} && ?long <= ${lon2})
                     FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
