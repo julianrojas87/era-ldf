@@ -91,15 +91,13 @@ export const abstractionTiles = [
     }
 ];
 
-export const vehicleTypes = [
-    { // Query for all vehicle types
-        accept: 'text/turtle',
-        query: `
+export const vehicleTypes = { // Query for all vehicle types
+    accept: 'text/turtle',
+    query: `
         PREFIX era: <http://data.europa.eu/949/>
         CONSTRUCT WHERE {
             ?s a era:VehicleType;
                 ?p ?o.
         }
         `
-    }
-];
+};
