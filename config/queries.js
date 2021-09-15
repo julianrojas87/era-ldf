@@ -4,37 +4,57 @@
  */
 
 export const implementationTiles = [
-    { // Query for all OPs, SoLs, SoL Tracks and their location in given bbox
+    { // Query for all operational points and their location in given bbox
         accept: 'application/n-triples',
         query: (lat1, lon1, lat2, lon2) => {
             return `
-                PREFIX era: <http://data.europa.eu/949/>
-                PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
-                CONSTRUCT {
-                    ?sol ?solp ?solo.
-                    ?track ?trackp ?tracko.
-                    ?op ?opp ?opo.
-                    ?l ?lp ?lo.
-                } WHERE {
-                    ?sol a era:SectionOfLine;
-                        era:opStart ?op;
-                        era:track ?track;
-                        ?solp ?solo.
+            PREFIX era: <http://data.europa.eu/949/>
+            PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+            CONSTRUCT {
+                ?op ?opp ?opo.
+                ?l ?lp ?lo.
+            } WHERE {
+                ?op a era:OperationalPoint;
+                    wgs:location ?l;
+                    ?opp ?opo.
+                
+                ?l wgs:lat ?lat;
+                    wgs:long ?long;
+                    ?lp ?lo.
+                
+                FILTER(?long >= ${lon1} && ?long <= ${lon2})
+                FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
+            }
+        `;
+        }
+    },
+    { // Query for all SoLs and Tracks in given bbox
+        accept: 'application/n-triples',
+        query: (lat1, lon1, lat2, lon2) => {
+            return `
+            PREFIX era: <http://data.europa.eu/949/>
+            PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+            CONSTRUCT {
+                ?sol ?solp ?solo.
+                ?track ?trackp ?tracko.
+            } WHERE {
+                ?sol a era:SectionOfLine;
+                    era:opStart ?op;
+                    era:track ?track;
+                    ?solp ?solo.
 
-                    ?track ?trackp ?tracko.
+                ?track ?trackp ?tracko.
 
-                    ?op a era:OperationalPoint;
-                        wgs:location ?l;
-                        ?opp ?opo.
+                ?op a era:OperationalPoint;
+                    wgs:location ?l.
 
-                    ?l wgs:lat ?lat;
-                       wgs:long ?long;
-                       ?lp ?lo.
-                    
-                    FILTER(?long >= ${lon1} && ?long <= ${lon2})
-                    FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
-                }
-            `;
+                ?l wgs:lat ?lat;
+                    wgs:long ?long.
+                
+                FILTER(?long >= ${lon1} && ?long <= ${lon2})
+                FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
+            }
+        `;
         }
     }
 ];
