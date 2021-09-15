@@ -25,31 +25,7 @@ export const implementationTiles = {
         "era:inCountry": { "@type": "@id" }
     },
     graph: [
-        { // Query for all operational points and their location in given bbox
-            accept: 'application/n-triples',
-            query: (lat1, lon1, lat2, lon2) => {
-                return `
-                PREFIX era: <http://data.europa.eu/949/>
-                PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
-                CONSTRUCT {
-                    ?mnto ?mntop ?mntoo.
-                    ?l ?lp ?lo.
-                } WHERE {
-                    ?mnto a era:OperationalPoint;
-                        wgs:location ?l;
-                        ?mntop ?mntoo.
-                    
-                    ?l wgs:lat ?lat;
-                        wgs:long ?long;
-                        ?lp ?lo.
-                    
-                    FILTER(?long >= ${lon1} && ?long <= ${lon2})
-                    FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
-                }
-            `;
-            }
-        },
-        { // Query for all SoLs and Tracks in given bbox
+        { // Query for all OPs, SoLs, SoL Tracks and their location in given bbox
             accept: 'application/n-triples',
             query: (lat1, lon1, lat2, lon2) => {
                 return `
@@ -58,6 +34,8 @@ export const implementationTiles = {
                 CONSTRUCT {
                     ?sol ?solp ?solo.
                     ?track ?trackp ?tracko.
+                    ?op ?opp ?opo.
+                    ?l ?lp ?lo.
                 } WHERE {
                     ?sol a era:SectionOfLine;
                         era:opStart ?op;
@@ -67,10 +45,12 @@ export const implementationTiles = {
                     ?track ?trackp ?tracko.
 
                     ?op a era:OperationalPoint;
-                        wgs:location ?l.
+                        wgs:location ?l;
+                        ?opp ?opo.
 
                     ?l wgs:lat ?lat;
-                    wgs:long ?long.
+                       wgs:long ?long;
+                       ?lp ?lo.
                     
                     FILTER(?long >= ${lon1} && ?long <= ${lon2})
                     FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
@@ -102,82 +82,53 @@ export const abstractionTiles = {
         "era:endPort": { "@type": "@id" }
     },
     graph: [
-        { // Query for all node ports in given bbox
+        { // Query for all meso and micro elements/relations in given bbox
             accept: 'application/n-triples',
             query: (lat1, lon1, lat2, lon2) => {
                 return `
-                PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
                 PREFIX era: <http://data.europa.eu/949/>
+                PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
                 CONSTRUCT {
-                    ?np ?npp ?npo.
-                    ?mna ?mnap ?mnao.
+                    ?mesoOPNe ?mesoOPNep ?mesoOPNeo.
+                    ?microOPNe ?microOPNep ?microOPNeo.
+                    ?mesoSOLNe ?mesoSOLNep ?mesoSOLNeo.
+                    ?microSOLNe ?microSOLNep ?microSOLNeo.
+                    ?mesoNr ?mesoNrp ?mesoNro.
+                    ?microNr ?microNrp ?microNro.
                 } WHERE {
-                    ?np era:belongsToNode ?mna;
-                        wgs:lat ?lat;
-                        wgs:long ?long;
-                        ?npp ?npo.
+                    ?mesoOPNe a era:NetElement;
+                            era:elementPart ?microOPNe;
+                            era:hasImplementation ?op;
+                            ?mesoOPNep ?mesoOPNeo.
                     
-                    ?mna ?mnap ?mnao.
+                    ?microOPNe ?microOPNep ?microOPNeo.
+                    
+                    ?mesoSOLNe a era:NetElement;
+                            era:elementPart ?microSOLNe;
+                            era:hasImplementation ?sol;
+                            ?mesoSOLNep ?mesoSOLNeo.
+                    
+                    ?microSOLNe ?microSOLNep ?microSOLNeo.
+                    
+                    ?mesoNr a era:NetRelation;
+                            era:elementA ?mesoOPNe;
+                            era:elementB ?mesoSOLNe;
+                            ?mesoNrp ?mesoNro.
+                            
+                    ?microNr a era:NetRelation;
+                            era:elementA|era:elementB ?microOPNe;
+                            era:elementB|era:elementA ?microSOLNe;
+                            ?microNrp ?microNro.
+                    
+                    ?op wgs:location ?l.
+                    
+                    ?l wgs:lat ?lat;
+                        wgs:long ?long.
                     
                     FILTER(?long >= ${lon1} && ?long <= ${lon2})
                     FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
                 }
             `;
-            }
-        },
-        { // Query for all departing micro links and internal links in given bbox
-            accept: 'application/n-triples',
-            query: (lat1, lon1, lat2, lon2) => {
-                return `
-                PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
-                PREFIX era: <http://data.europa.eu/949/>
-                CONSTRUCT {
-                    ?startLink ?startLinkp ?startLinko.
-                    ?enp ?enpp ?enpo.
-                } WHERE {
-                    ?startLink era:startPort ?np;
-                        era:endPort ?enp;
-                        ?startLinkp ?startLinko.
-                    ?enp ?enpp ?enpo.
-
-                    ?np wgs:lat ?lat;
-                        wgs:long ?long.
-                    
-                    
-                    FILTER(?long >= ${lon1} && ?long <= ${lon2})
-                    FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
-                }
-            `;
-            }
-        },
-        {   // Query to get related incoming micro links that are bidirectional 
-            accept: 'application/n-triples',
-            query: (lat1, lon1, lat2, lon2) => {
-                return `
-                PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
-                PREFIX era: <http://data.europa.eu/949/>
-                CONSTRUCT {
-                    ?mna ?mnap ?mnao.
-                    ?endLink ?endLinkp ?endLinko.
-                    ?stp ?stpp ?stpo.
-                } WHERE {
-                    ?np era:belongsToNode ?mna;
-                        wgs:lat ?lat;
-                        wgs:long ?long.
-                        
-                    ?mna ?mnap ?mnao.
-
-                    ?endLink era:endPort ?np;
-                        era:bidirectional "true"^^xsd:boolean;
-                        era:startPort ?stp;
-                        ?endLinkp ?endLinko.
-                
-                    ?stp ?stpp ?stpo.
-
-                    FILTER(?long >= ${lon1} && ?long <= ${lon2})
-                    FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
-                }
-                `;
             }
         }
     ]
