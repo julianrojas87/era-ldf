@@ -60,7 +60,7 @@ export const implementationTiles = [
 ];
 
 export const abstractionTiles = [
-    { // Query for all meso and micro elements/relations in given bbox
+    {   // Query for all meso and micro elements/relations in given bbox
         accept: 'application/n-triples',
         query: (lat1, lon1, lat2, lon2) => {
             return `
@@ -69,39 +69,90 @@ export const abstractionTiles = [
                 CONSTRUCT {
                     ?mesoOPNe ?mesoOPNep ?mesoOPNeo.
                     ?microOPNe ?microOPNep ?microOPNeo.
-                    ?mesoSOLNe ?mesoSOLNep ?mesoSOLNeo.
-                    ?microSOLNe ?microSOLNep ?microSOLNeo.
-                    ?mesoNr ?mesoNrp ?mesoNro.
-                    ?microNr ?microNrp ?microNro.
                 } WHERE {
                     ?mesoOPNe a era:NetElement;
                             era:elementPart ?microOPNe;
                             era:hasImplementation ?op;
                             ?mesoOPNep ?mesoOPNeo.
-                    
+                
                     ?microOPNe ?microOPNep ?microOPNeo.
                     
+                    ?op wgs:location ?l.
+                
+                    ?l wgs:lat ?lat;
+                    wgs:long ?long.
+                    
+                    FILTER(?long >= ${lon1} && ?long <= ${lon2})
+                    FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
+                }
+            `;
+        }
+    },
+    {
+        accept: 'application/n-triples',
+        query: (lat1, lon1, lat2, lon2) => {
+            return `
+                PREFIX era: <http://data.europa.eu/949/>
+                PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+                CONSTRUCT {
+                    ?mesoSOLNe ?mesoSOLNep ?mesoSOLNeo.
+                    ?microSOLNe ?microSOLNep ?microSOLNeo.
+                    ?mesoNr ?mesoNrp ?mesoNro.
+                } WHERE {
+                    ?mesoOPNe a era:NetElement;
+                            era:hasImplementation ?op.
+                
                     ?mesoSOLNe a era:NetElement;
                             era:elementPart ?microSOLNe;
-                            era:hasImplementation ?sol;
                             ?mesoSOLNep ?mesoSOLNeo.
-                    
+                
                     ?microSOLNe ?microSOLNep ?microSOLNeo.
-                    
+                
                     ?mesoNr a era:NetRelation;
                             era:elementA ?mesoOPNe;
                             era:elementB ?mesoSOLNe;
                             ?mesoNrp ?mesoNro.
+                
+                    ?op wgs:location ?l.
+                
+                    ?l wgs:lat ?lat;
+                    wgs:long ?long.
+                    
+                    FILTER(?long >= ${lon1} && ?long <= ${lon2})
+                    FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
+                }
+            `;
+        }
+    },
+    {
+        accept: 'application/n-triples',
+        query: (lat1, lon1, lat2, lon2) => {
+            return `
+                PREFIX era: <http://data.europa.eu/949/>
+                PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+                CONSTRUCT {
+                    ?microNr ?microNrp ?microNro.
+                } WHERE {
+                    ?mesoOPNe a era:NetElement;
+                            era:elementPart ?microOPNe;
+                            era:hasImplementation ?op.
                             
+                    ?mesoSOLNe a era:NetElement;
+                            era:elementPart ?microSOLNe.
+                
+                    ?mesoNr a era:NetRelation;
+                            era:elementA ?mesoOPNe;
+                            era:elementB ?mesoSOLNe.
+                
                     ?microNr a era:NetRelation;
                             era:elementA|era:elementB ?microOPNe;
                             era:elementB|era:elementA ?microSOLNe;
                             ?microNrp ?microNro.
-                    
+                
                     ?op wgs:location ?l.
-                    
+                
                     ?l wgs:lat ?lat;
-                        wgs:long ?long.
+                    wgs:long ?long.
                     
                     FILTER(?long >= ${lon1} && ?long <= ${lon2})
                     FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
