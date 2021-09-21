@@ -60,7 +60,7 @@ export const implementationTiles = [
 ];
 
 export const abstractionTiles = [
-    {   // Query for all meso and micro elements/relations in given bbox
+    {   // Query for all OP-related Net Elements in given bbox
         accept: 'application/n-triples',
         query: (lat1, lon1, lat2, lon2) => {
             return `
@@ -88,7 +88,7 @@ export const abstractionTiles = [
             `;
         }
     },
-    {
+    {   // Query for all SoL-related Net Elements and meso Net Relations in given bbox
         accept: 'application/n-triples',
         query: (lat1, lon1, lat2, lon2) => {
             return `
@@ -124,7 +124,7 @@ export const abstractionTiles = [
             `;
         }
     },
-    {
+    {   // Query for all Net Relations in given bbox
         accept: 'application/n-triples',
         query: (lat1, lon1, lat2, lon2) => {
             return `
