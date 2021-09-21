@@ -5,16 +5,19 @@
 
 export const config = {
     urlBase: '${BASE_URL_PATH}',
+    //urlBase: 'ldf',
     port: 3000,
-    //sparql: 'http://era.ilabt.imec.be/repositories/ERA-KG', // GraphDB
-    //sparql: 'https://test-linked.ec-dataplatform.eu/sparql', // Virtuoso (TEST env)
+    //sparql: 'http://era.ilabt.imec.be/repositories/ERA-KG2', // GraphDB
+    //sparql: 'https://linked.ec-dataplatform.eu/sparql', // Virtuoso (TEST env)
     sparql: '${SPARQL_ENDPOINT}',
     sparqlTileBaseURI: '${TILE_BASE_URI}',
+    //sparqlTileBaseURI: 'https://data-interop.era.europa.eu/ldf/sparql-tiles',
     concurrentQueries: true,
     responseHeaders: {
         'Access-Control-Allow-Origin': '*',
         'Vary': 'Accept',
         'Cache-Control': 'public, max-age=${CACHE_MAX_AGE}'
+        //'Cache-Control': 'public, max-age=86400'
     },
     sparqlQueryConfig: {
         headers: {
@@ -27,8 +30,8 @@ export const config = {
             infer: false,
             timeout: 0,
             "default-graph-uri": '${ERA_NAMED_GRAPH}' // Named graph needed for Virtuoso PROD env
-            //"default-graph-uri": 'https://test-linked.ec-dataplatform.eu/era' // Named graph needed for Virtuoso TEST env
+            //"default-graph-uri": 'http://era.europa.eu/knowledge-graph' // Named graph needed for Virtuoso TEST env
         }
     },
-    logLevel: 'info'
+    logLevel: 'debug'
 };
