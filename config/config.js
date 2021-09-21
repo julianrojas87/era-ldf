@@ -8,13 +8,13 @@ export const config = {
     port: 3000,
     //sparql: 'http://era.ilabt.imec.be/repositories/ERA-KG', // GraphDB
     //sparql: 'https://test-linked.ec-dataplatform.eu/sparql', // Virtuoso (TEST env)
-    sparql: '${SPARQL_ENDPOINT}', // Virtuoso (PROD env)
+    sparql: '${SPARQL_ENDPOINT}',
     sparqlTileBaseURI: '${TILE_BASE_URI}',
     concurrentQueries: true,
     responseHeaders: {
         'Access-Control-Allow-Origin': '*',
         'Vary': 'Accept',
-        'Cache-Control': 'public, max-age=${CACHE_MAX_AGE}' // Cache for 30 days
+        'Cache-Control': 'public, max-age=${CACHE_MAX_AGE}'
     },
     sparqlQueryConfig: {
         headers: {
