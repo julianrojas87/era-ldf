@@ -9,6 +9,7 @@ import { sparqlTiles } from '../lib/routes/sparql-tiles.js';
 import { vehicles } from '../lib/routes/vehicles.js';
 import { search } from '../lib/routes/search.js';
 import { count } from '../lib/routes/count.js';
+import { operationalPoints } from '../lib/routes/operationalPoints.js';
 import { config } from '../config/config.js'; 
 
 const server = fastify({ logger: false });
@@ -16,6 +17,7 @@ const server = fastify({ logger: false });
 server.register(preflight);
 server.register(sparqlTiles);
 server.register(vehicles);
+server.register(operationalPoints);
 server.register(search);
 server.register(count);
 

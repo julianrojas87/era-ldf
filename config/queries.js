@@ -172,3 +172,24 @@ export const vehicleTypes = { // Query for all vehicle types
         }
         `
 };
+
+export const OPs = { // Query for all operational points label and location
+    accept: 'text/turtle',
+    query: `
+        PREFIX era: <http://data.europa.eu/949/>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+        PREFIX geosparql: <http://www.opengis.net/ont/geosparql#>
+        CONSTRUCT {
+            ?op rdfs:label ?oplabel;
+                wgs:location ?l.
+            ?l geosparql:asWKT ?wkt.
+        } WHERE {
+            ?op a era:OperationalPoint;
+                rdfs:label ?oplabel;
+                wgs:location ?l.
+        
+            ?l geosparql:asWKT ?wkt.
+        }
+        `
+};
