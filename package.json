@@ -1,7 +1,7 @@
 {
   "name": "era-ldf",
   "type": "module",
-  "version": "1.1.2",
+  "version": "2.1.0",
   "description": "Node.js application to create LDF from ERA's KG",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
