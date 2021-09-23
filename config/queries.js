@@ -3,10 +3,11 @@
  * Ghent University - imec - IDLab
  */
 
-export const implementationTiles = [
-    { // Query for all operational points and their location in given bbox
-        accept: 'application/n-triples',
-        query: (lat1, lon1, lat2, lon2) => {
+export const implementationTiles = {
+    accept: 'application/n-triples',
+    queries: [
+        (lat1, lon1, lat2, lon2) => {
+            // Query for all operational points and their location in given bbox
             return `
             PREFIX era: <http://data.europa.eu/949/>
             PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
@@ -26,11 +27,9 @@ export const implementationTiles = [
                 FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
             }
         `;
-        }
-    },
-    { // Query for all SoLs and Tracks in given bbox
-        accept: 'application/n-triples',
-        query: (lat1, lon1, lat2, lon2) => {
+        },
+        (lat1, lon1, lat2, lon2) => {
+            // Query for all SoLs and Tracks in given bbox
             return `
             PREFIX era: <http://data.europa.eu/949/>
             PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
@@ -56,13 +55,14 @@ export const implementationTiles = [
             }
         `;
         }
-    }
-];
+    ]
+};
 
-export const abstractionTiles = [
-    {   // Query for all OP-related Net Elements in given bbox
-        accept: 'application/n-triples',
-        query: (lat1, lon1, lat2, lon2) => {
+export const abstractionTiles = {
+    accept: 'application/n-triples',
+    queries: [
+        (lat1, lon1, lat2, lon2) => {
+            // Query for all OP-related Net Elements in given bbox
             return `
                 PREFIX era: <http://data.europa.eu/949/>
                 PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
@@ -86,11 +86,9 @@ export const abstractionTiles = [
                     FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
                 }
             `;
-        }
-    },
-    {   // Query for all SoL-related Net Elements and meso Net Relations in given bbox
-        accept: 'application/n-triples',
-        query: (lat1, lon1, lat2, lon2) => {
+        },
+        (lat1, lon1, lat2, lon2) => {
+            // Query for all SoL-related Net Elements and meso Net Relations in given bbox
             return `
                 PREFIX era: <http://data.europa.eu/949/>
                 PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
@@ -122,11 +120,9 @@ export const abstractionTiles = [
                     FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
                 }
             `;
-        }
-    },
-    {   // Query for all Net Relations in given bbox
-        accept: 'application/n-triples',
-        query: (lat1, lon1, lat2, lon2) => {
+        },
+        (lat1, lon1, lat2, lon2) => {
+            // Query for all Net Relations in given bbox
             return `
                 PREFIX era: <http://data.europa.eu/949/>
                 PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
@@ -159,8 +155,8 @@ export const abstractionTiles = [
                 }
             `;
         }
-    }
-];
+    ]
+};
 
 export const vehicleTypes = { // Query for all vehicle types
     accept: 'text/turtle',
