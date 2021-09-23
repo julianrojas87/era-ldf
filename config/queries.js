@@ -109,8 +109,8 @@ export const abstractionTiles = [
                     ?microSOLNe ?microSOLNep ?microSOLNeo.
                 
                     ?mesoNr a era:NetRelation;
-                            era:elementA ?mesoOPNe;
-                            era:elementB ?mesoSOLNe;
+                            era:elementA|era:elementB ?mesoOPNe;
+                            era:elementB|era:elementA ?mesoSOLNe;
                             ?mesoNrp ?mesoNro.
                 
                     ?op wgs:location ?l.
@@ -141,8 +141,8 @@ export const abstractionTiles = [
                             era:elementPart ?microSOLNe.
                 
                     ?mesoNr a era:NetRelation;
-                            era:elementA ?mesoOPNe;
-                            era:elementB ?mesoSOLNe.
+                            era:elementA|era:elementB ?mesoOPNe;
+                            era:elementB|era:elementA ?mesoSOLNe.
                 
                     ?microNr a era:NetRelation;
                             era:elementA|era:elementB ?microOPNe;
