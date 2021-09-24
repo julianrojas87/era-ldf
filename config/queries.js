@@ -80,7 +80,7 @@ export const abstractionTiles = {
                     ?op wgs:location ?l.
                 
                     ?l wgs:lat ?lat;
-                    wgs:long ?long.
+                        wgs:long ?long.
                     
                     FILTER(?long >= ${lon1} && ?long <= ${lon2})
                     FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
@@ -102,6 +102,7 @@ export const abstractionTiles = {
                 
                     ?mesoSOLNe a era:NetElement;
                             era:elementPart ?microSOLNe;
+                            era:hasImplementation ?sol;
                             ?mesoSOLNep ?mesoSOLNeo.
                 
                     ?microSOLNe ?microSOLNep ?microSOLNeo.
@@ -112,9 +113,11 @@ export const abstractionTiles = {
                             ?mesoNrp ?mesoNro.
                 
                     ?op wgs:location ?l.
+                    
+                    ?sol a era:SectionOfLine.
                 
                     ?l wgs:lat ?lat;
-                    wgs:long ?long.
+                        wgs:long ?long.
                     
                     FILTER(?long >= ${lon1} && ?long <= ${lon2})
                     FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
@@ -134,6 +137,7 @@ export const abstractionTiles = {
                             era:hasImplementation ?op.
                             
                     ?mesoSOLNe a era:NetElement;
+                            era:hasImplementation ?sol;
                             era:elementPart ?microSOLNe.
                 
                     ?mesoNr a era:NetRelation;
@@ -146,9 +150,11 @@ export const abstractionTiles = {
                             ?microNrp ?microNro.
                 
                     ?op wgs:location ?l.
+
+                    ?sol a era:SectionOfLine.
                 
                     ?l wgs:lat ?lat;
-                    wgs:long ?long.
+                        wgs:long ?long.
                     
                     FILTER(?long >= ${lon1} && ?long <= ${lon2})
                     FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
