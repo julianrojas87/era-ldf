@@ -184,11 +184,13 @@ export const OPs = { // Query for all operational points label and location
         PREFIX geosparql: <http://www.opengis.net/ont/geosparql#>
         CONSTRUCT {
             ?op rdfs:label ?oplabel;
+                era:uopid ?uopid;
                 wgs:location ?l.
             ?l geosparql:asWKT ?wkt.
         } WHERE {
             ?op a era:OperationalPoint;
                 rdfs:label ?oplabel;
+                era:uopid ?uopid;
                 wgs:location ?l.
         
             ?l geosparql:asWKT ?wkt.
