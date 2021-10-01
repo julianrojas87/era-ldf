@@ -67,15 +67,13 @@ export const abstractionTiles = {
                 PREFIX era: <http://data.europa.eu/949/>
                 PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
                 CONSTRUCT {
-                    ?mesoOPNe ?mesoOPNep ?mesoOPNeo.
-                    ?microOPNe ?microOPNep ?microOPNeo.
+                    ?mesoOPNe era:elementPart ?microOPNe;
+                        era:hasImplementation ?op.
+                    ?microOPNe a era:NetElement.
                 } WHERE {
                     ?mesoOPNe a era:NetElement;
                             era:elementPart ?microOPNe;
-                            era:hasImplementation ?op;
-                            ?mesoOPNep ?mesoOPNeo.
-                
-                    ?microOPNe ?microOPNep ?microOPNeo.
+                            era:hasImplementation ?op.
                     
                     ?op wgs:location ?l.
                 
@@ -93,29 +91,32 @@ export const abstractionTiles = {
                 PREFIX era: <http://data.europa.eu/949/>
                 PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
                 CONSTRUCT {
-                    ?mesoSOLNe ?mesoSOLNep ?mesoSOLNeo.
-                    ?microSOLNe ?microSOLNep ?microSOLNeo.
+                    ?mesoSOLNe a era:NetElement;
+                            era:elementPart ?microSOLNe;
+                            era:hasImplementation ?sol.
+                    ?microSOLNe a era:NetElement;
+                                era:hasImplementation ?track;
+                                era:length ?length.
                     ?mesoNr ?mesoNrp ?mesoNro.
                 } WHERE {
                     ?mesoOPNe a era:NetElement;
-                            era:hasImplementation ?op.
+                            era:hasImplementation [ wgs:location ?l ].
                 
                     ?mesoSOLNe a era:NetElement;
                             era:elementPart ?microSOLNe;
-                            era:hasImplementation ?sol;
-                            ?mesoSOLNep ?mesoSOLNeo.
+                            era:hasImplementation ?sol.
                 
-                    ?microSOLNe ?microSOLNep ?microSOLNeo.
+                    ?microSOLNe a era:NetElement;
+                                era:hasImplementation ?track;
+                                era:length ?length.
                 
                     ?mesoNr a era:NetRelation;
                             era:elementA|era:elementB ?mesoOPNe;
                             era:elementB|era:elementA ?mesoSOLNe;
                             ?mesoNrp ?mesoNro.
-                
-                    ?op wgs:location ?l.
                     
                     ?sol a era:SectionOfLine.
-                
+                    
                     ?l wgs:lat ?lat;
                         wgs:long ?long.
                     
@@ -125,7 +126,7 @@ export const abstractionTiles = {
             `;
         },
         (lat1, lon1, lat2, lon2) => {
-            // Query for all Net Relations in given bbox
+            // Query for all micro Net Relations in given bbox
             return `
                 PREFIX era: <http://data.europa.eu/949/>
                 PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
@@ -134,10 +135,10 @@ export const abstractionTiles = {
                 } WHERE {
                     ?mesoOPNe a era:NetElement;
                             era:elementPart ?microOPNe;
-                            era:hasImplementation ?op.
+                            era:hasImplementation [ wgs:location ?l ].
                             
                     ?mesoSOLNe a era:NetElement;
-                            era:hasImplementation ?sol;
+                            era:hasImplementation [ a era:SectionOfLine ];
                             era:elementPart ?microSOLNe.
                 
                     ?mesoNr a era:NetRelation;
@@ -149,16 +150,60 @@ export const abstractionTiles = {
                             era:elementB|era:elementA ?microSOLNe;
                             ?microNrp ?microNro.
                 
-                    ?op wgs:location ?l.
-
-                    ?sol a era:SectionOfLine.
-                
                     ?l wgs:lat ?lat;
                         wgs:long ?long.
                     
                     FILTER(?long >= ${lon1} && ?long <= ${lon2})
                     FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
                 }
+            `;
+        },
+        (lat1, lon1, lat2, lon2) => {
+            // Query for location and micro NetRelations of tile border elements
+            return `
+            PREFIX era: <http://data.europa.eu/949/>
+            PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            PREFIX geosparql: <http://www.opengis.net/ont/geosparql#>
+            CONSTRUCT {
+                ?outOP wgs:location ?outL;
+                    era:hasAbstraction ?outMesoNe.
+                ?outL geosparql:asWKT ?wkt.
+                ?outMesoNe era:elementPart ?outMicroNe;
+                    era:hasImplementation ?outOP.
+                ?outMicroNe a era:NetElement.
+                ?microNr ?microNrp ?microNro.
+            } WHERE {        
+                ?inOP a era:OperationalPoint;
+                      wgs:location [ wgs:lat ?inLat; wgs:long ?inLong ].
+            
+                ?sol a era:SectionOfLine;
+                     era:hasAbstraction [ era:elementPart ?solMicroNe ];
+                     era:opStart|era:opEnd ?inOP;
+                     era:opEnd|era:opStart ?outOP.
+                
+                ?outOP wgs:location ?outL;
+                       era:hasAbstraction ?outMesoNe.
+                
+                ?outL wgs:lat ?outLat;
+                      wgs:long ?outLong;
+                      geosparql:asWKT ?wkt.
+                   
+                ?outMesoNe era:elementPart ?outMicroNe;
+                           era:hasImplementation ?outOP.
+                
+                ?microNr a era:NetRelation;
+                         era:elementA|era:elementB ?outMicroNe;
+                         era:elementB|era:elementA ?solMicroNe;
+                         ?microNrp ?microNro.
+                
+                # Conditions for OP to be inside the tile in question
+                FILTER(?inLong >= ${lon1} && ?inLong <= ${lon2})
+                FILTER(?inLat <= ${lat1} && ?inLat >= ${lat2})
+
+                # Condition for OP to be outside the tile in question
+                FILTER(?outLong < ${lon1} || ?outLong > ${lon2} || ?outLat > ${lat1} || ?outLat < ${lat2})
+            }            
             `;
         }
     ]
