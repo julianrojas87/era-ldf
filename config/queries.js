@@ -167,7 +167,8 @@ export const abstractionTiles = {
             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
             PREFIX geosparql: <http://www.opengis.net/ont/geosparql#>
             CONSTRUCT {
-                ?outOP wgs:location ?outL;
+                ?outOP a era:OperationalPoint;
+                    wgs:location ?outL;
                     era:hasAbstraction ?outMesoNe.
                 ?outL geosparql:asWKT ?wkt.
                 ?outMesoNe a era:NetElement;
