@@ -67,7 +67,8 @@ export const abstractionTiles = {
                 PREFIX era: <http://data.europa.eu/949/>
                 PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
                 CONSTRUCT {
-                    ?mesoOPNe era:elementPart ?microOPNe;
+                    ?mesoOPNe a era:NetElement;
+                        era:elementPart ?microOPNe;
                         era:hasImplementation ?op.
                     ?microOPNe a era:NetElement.
                 } WHERE {
