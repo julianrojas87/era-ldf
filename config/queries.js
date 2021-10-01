@@ -191,7 +191,8 @@ export const abstractionTiles = {
                       wgs:long ?outLong;
                       geosparql:asWKT ?wkt.
                    
-                ?outMesoNe era:elementPart ?outMicroNe;
+                ?outMesoNe a era:NetElement;
+                           era:elementPart ?outMicroNe;
                            era:hasImplementation ?outOP.
                 
                 ?microNr a era:NetRelation;
