@@ -14,14 +14,18 @@ export const implementationTiles = {
             CONSTRUCT {
                 ?op ?opp ?opo.
                 ?l ?lp ?lo.
+                ?li ?lip ?lio.
             } WHERE {
                 ?op a era:OperationalPoint;
                     wgs:location ?l;
+                    era:lineReference ?li;
                     ?opp ?opo.
                 
                 ?l wgs:lat ?lat;
                     wgs:long ?long;
                     ?lp ?lo.
+
+                ?li ?lip ?lio.
                 
                 FILTER(?long >= ${lon1} && ?long <= ${lon2})
                 FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
