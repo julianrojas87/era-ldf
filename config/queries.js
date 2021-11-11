@@ -66,24 +66,45 @@ export const abstractionTiles = {
     accept: 'application/n-triples',
     queries: [
         (lat1, lon1, lat2, lon2) => {
-            // Query for all OP-related Net Elements in given bbox
+            // Query for all OP topology nodes and their connections within given bbox
             return `
                 PREFIX era: <http://data.europa.eu/949/>
+                PREFIX geosparql: <http://www.opengis.net/ont/geosparql#>
                 PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+                PREFIX era-nv: <http://data.europa.eu/949/concepts/navigabilities/>
                 CONSTRUCT {
-                    ?mesoOPNe a era:NetElement;
-                        era:elementPart ?microOPNe;
-                        era:hasImplementation ?op.
-                    ?microOPNe a era:NetElement.
+                    ?opne geosparql:asWKT ?wkt;
+                        era:partOf ?mesoOPNe;
+                        era:linkedTo ?nextNe.
                 } WHERE {
-                    ?mesoOPNe a era:NetElement;
-                            era:elementPart ?microOPNe;
-                            era:hasImplementation ?op.
+                    ?opne a era:NetElement;
+                        ^era:elementPart ?mesoOPNe.
                     
-                    ?op wgs:location ?l.
-                
-                    ?l wgs:lat ?lat;
-                        wgs:long ?long.
+                    ?mesoOPNe era:hasImplementation [
+                        a era:OperationalPoint;
+                        wgs:location [ 
+                            geosparql:asWKT ?wkt;
+                            wgs:lat ?lat;
+                            wgs:long ?long
+                        ]
+                    ].
+                    
+                    VALUES ?navAB { era-nv:AB era-nv:Both }
+                    VALUES ?navBA { era-nv:BA era-nv:Both }
+                    
+                    {
+                        ?nr1 a era:NetRelation;
+                            era:elementA ?opne;
+                            era:elementB ?nextNe;
+                            era:navigability ?navAB.   
+                    }
+                    UNION
+                    {
+                        ?nr2 a era:NetRelation;
+                            era:elementA ?nextNe;
+                            era:elementB ?opne;
+                            era:navigability ?navBA.
+                    }
                     
                     FILTER(?long >= ${lon1} && ?long <= ${lon2})
                     FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
@@ -91,39 +112,53 @@ export const abstractionTiles = {
             `;
         },
         (lat1, lon1, lat2, lon2) => {
-            // Query for all SoL-related Net Elements and meso Net Relations in given bbox
+            // Query for all SoL topology nodes and their connections within given bbox
             return `
                 PREFIX era: <http://data.europa.eu/949/>
+                PREFIX geosparql: <http://www.opengis.net/ont/geosparql#>
                 PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+                PREFIX era-nv: <http://data.europa.eu/949/concepts/navigabilities/>
                 CONSTRUCT {
-                    ?mesoSOLNe a era:NetElement;
-                            era:elementPart ?microSOLNe;
-                            era:hasImplementation ?sol.
-                    ?microSOLNe a era:NetElement;
-                                era:hasImplementation ?track;
-                                era:length ?length.
-                    ?mesoNr ?mesoNrp ?mesoNro.
+                    ?solne era:length ?length;
+                            era:lineNationalId ?line;
+                            era:partOf ?mesoSOLNe;
+                            era:linkedTo ?opne.
                 } WHERE {
-                    ?mesoOPNe a era:NetElement;
-                            era:hasImplementation [ wgs:location ?l ].
-                
-                    ?mesoSOLNe a era:NetElement;
-                            era:elementPart ?microSOLNe;
-                            era:hasImplementation ?sol.
-                
-                    ?microSOLNe a era:NetElement;
-                                era:hasImplementation ?track;
-                                era:length ?length.
-                
-                    ?mesoNr a era:NetRelation;
-                            era:elementA|era:elementB ?mesoOPNe;
-                            era:elementB|era:elementA ?mesoSOLNe;
-                            ?mesoNrp ?mesoNro.
+                    ?opne a era:NetElement;
+                        ^era:elementPart [ era:hasImplementation ?OP ].
                     
-                    ?sol a era:SectionOfLine.
+                    ?OP a era:OperationalPoint;
+                        wgs:location [ 
+                            wgs:lat ?lat;
+                            wgs:long ?long
+                        ].
                     
-                    ?l wgs:lat ?lat;
-                        wgs:long ?long.
+                    ?solne a era:NetElement;
+                        era:length ?length;
+                        ^era:elementPart ?mesoSOLNe.
+                    
+                    ?mesoSOLNe era:hasImplementation [
+                        a era:SectionOfLine;
+                        era:lineNationalId ?line;
+                        era:opStart|era:opEnd ?OP
+                    ]
+                    
+                    VALUES ?navAB { era-nv:AB era-nv:Both }
+                    VALUES ?navBA { era-nv:BA era-nv:Both }
+                    
+                    {
+                        ?nr1 a era:NetRelation;
+                            era:elementA ?solne;
+                            era:elementB ?opne;
+                            era:navigability ?navAB.
+                    }
+                    UNION
+                    {
+                        ?nr2 a era:NetRelation;
+                            era:elementA ?opne;
+                            era:elementB ?solne;
+                            era:navigability ?navBA.
+                    }
                     
                     FILTER(?long >= ${lon1} && ?long <= ${lon2})
                     FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
@@ -131,79 +166,52 @@ export const abstractionTiles = {
             `;
         },
         (lat1, lon1, lat2, lon2) => {
-            // Query for all micro Net Relations in given bbox
-            return `
-                PREFIX era: <http://data.europa.eu/949/>
-                PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
-                CONSTRUCT {
-                    ?microNr ?microNrp ?microNro.
-                } WHERE {
-                    ?mesoOPNe a era:NetElement;
-                            era:elementPart ?microOPNe;
-                            era:hasImplementation [ wgs:location ?l ].
-                            
-                    ?mesoSOLNe a era:NetElement;
-                            era:hasImplementation [ a era:SectionOfLine ];
-                            era:elementPart ?microSOLNe.
-                
-                    ?mesoNr a era:NetRelation;
-                            era:elementA|era:elementB ?mesoOPNe;
-                            era:elementB|era:elementA ?mesoSOLNe.
-                
-                    ?microNr a era:NetRelation;
-                            era:elementA|era:elementB ?microOPNe;
-                            era:elementB|era:elementA ?microSOLNe;
-                            ?microNrp ?microNro.
-                
-                    ?l wgs:lat ?lat;
-                        wgs:long ?long.
-                    
-                    FILTER(?long >= ${lon1} && ?long <= ${lon2})
-                    FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
-                }
-            `;
-        },
-        (lat1, lon1, lat2, lon2) => {
-            // Query for location and micro NetRelations of tile border elements
+            // Query for SoL topology nodes at the borders of bbox
             return `
             PREFIX era: <http://data.europa.eu/949/>
             PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
-            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
             PREFIX geosparql: <http://www.opengis.net/ont/geosparql#>
+            PREFIX era-nv: <http://data.europa.eu/949/concepts/navigabilities/>
             CONSTRUCT {
-                ?outOP a era:OperationalPoint;
-                    wgs:location ?outL;
-                    era:hasAbstraction ?outMesoNe.
-                ?outL geosparql:asWKT ?wkt.
-                ?outMesoNe a era:NetElement;
-                    era:elementPart ?outMicroNe;
-                    era:hasImplementation ?outOP.
-                ?outMicroNe a era:NetElement.
-                ?microNr ?microNrp ?microNro.
+                ?solne era:linkedTo ?opne.
+                ?opne geosparql:asWKT ?wkt;
+                    era:partOf ?outMesoNe.
             } WHERE {        
                 ?inOP a era:OperationalPoint;
-                      wgs:location [ wgs:lat ?inLat; wgs:long ?inLong ].
-            
-                ?sol a era:SectionOfLine;
-                     era:hasAbstraction [ era:elementPart ?solMicroNe ];
-                     era:opStart|era:opEnd ?inOP;
-                     era:opEnd|era:opStart ?outOP.
-                
-                ?outOP wgs:location ?outL;
-                       era:hasAbstraction ?outMesoNe.
-                
-                ?outL wgs:lat ?outLat;
-                      wgs:long ?outLong;
-                      geosparql:asWKT ?wkt.
-                   
+                    wgs:location [ wgs:lat ?inLat; wgs:long ?inLong ].
+
+                ?outOP era:hasAbstraction ?outMesoNe;
+                    wgs:location [
+                        wgs:lat ?outLat;
+                        wgs:long ?outLong;
+                        geosparql:asWKT ?wkt 
+                    ].
+
                 ?outMesoNe a era:NetElement;
-                           era:elementPart ?outMicroNe;
-                           era:hasImplementation ?outOP.
+                        era:elementPart ?opne;
+                        era:hasImplementation ?outOP.
                 
-                ?microNr a era:NetRelation;
-                         era:elementA|era:elementB ?outMicroNe;
-                         era:elementB|era:elementA ?solMicroNe;
-                         ?microNrp ?microNro.
+                ?sol a era:SectionOfLine;
+                    era:hasAbstraction [ era:elementPart ?solne ];
+                    era:opStart|era:opEnd ?inOP;
+                    era:opEnd|era:opStart ?outOP.
+                
+                VALUES ?navAB { era-nv:AB era-nv:Both }
+                VALUES ?navBA { era-nv:BA era-nv:Both }
+
+                {
+                    ?nr1 a era:NetRelation;
+                        era:elementA ?solne;
+                        era:elementB ?opne;
+                        era:navigability ?navAB.
+                }
+                UNION
+                {
+                    ?nr2 a era:NetRelation;
+                        era:elementA ?opne;
+                        era:elementB ?solne;
+                        era:navigability ?navBA.
+                }
                 
                 # Conditions for OP to be inside the tile in question
                 FILTER(?inLong >= ${lon1} && ?inLong <= ${lon2})
