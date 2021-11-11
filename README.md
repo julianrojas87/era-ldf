@@ -16,7 +16,7 @@ To deploy follow these steps:
    
    ERA_LDF_PORT=3000 # TCP port where the application will receive HTTP connections
    
-   BASE_URL_PATH=ldf # Base path for the API URL. E.g. http://localhost:3000/ldf/... 
+   BASE_URL_PATH=ldf # Base path for the API URL. E.g. http://localhost:3000/ldf/...
    
    SPARQL_ENDPOINT=https://linked.ec-dataplatform.eu/sparql # Remote SPARQL endpoint hosting the KG
    
