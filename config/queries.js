@@ -76,22 +76,23 @@ export const abstractionTiles = {
                     ?opne geosparql:asWKT ?wkt;
                         era:partOf ?mesoOPNe;
                         era:linkedTo ?nextNe.
+                    ?mesoOPNe era:hasImplementation ?OP.
                 } WHERE {
                     ?opne a era:NetElement;
                         ^era:elementPart ?mesoOPNe.
-                    
-                    ?mesoOPNe era:hasImplementation [
-                        a era:OperationalPoint;
+                
+                    ?mesoOPNe era:hasImplementation ?OP.
+                            
+                    ?OP a era:OperationalPoint;
                         wgs:location [ 
                             geosparql:asWKT ?wkt;
                             wgs:lat ?lat;
                             wgs:long ?long
-                        ]
-                    ].
-                    
+                        ].
+                
                     VALUES ?navAB { era-nv:AB era-nv:Both }
                     VALUES ?navBA { era-nv:BA era-nv:Both }
-                    
+                
                     {
                         ?nr1 a era:NetRelation;
                             era:elementA ?opne;
@@ -123,41 +124,42 @@ export const abstractionTiles = {
                             era:lineNationalId ?line;
                             era:partOf ?mesoSOLNe;
                             era:linkedTo ?opne.
+                    ?mesoSOLNe era:hasImplementation ?SoL.
                 } WHERE {
                     ?opne a era:NetElement;
-                        ^era:elementPart [ era:hasImplementation ?OP ].
+                            ^era:elementPart [ era:hasImplementation ?OP ].
                     
                     ?OP a era:OperationalPoint;
                         wgs:location [ 
-                            wgs:lat ?lat;
-                            wgs:long ?long
+                                wgs:lat ?lat;
+                                wgs:long ?long
                         ].
                     
                     ?solne a era:NetElement;
-                        era:length ?length;
-                        ^era:elementPart ?mesoSOLNe.
+                            era:length ?length;
+                            ^era:elementPart ?mesoSOLNe.
                     
-                    ?mesoSOLNe era:hasImplementation [
-                        a era:SectionOfLine;
+                    ?mesoSOLNe era:hasImplementation ?SoL.
+                        
+                    ?SoL a era:SectionOfLine;
                         era:lineNationalId ?line;
-                        era:opStart|era:opEnd ?OP
-                    ]
+                        era:opStart|era:opEnd ?OP.
                     
                     VALUES ?navAB { era-nv:AB era-nv:Both }
                     VALUES ?navBA { era-nv:BA era-nv:Both }
                     
                     {
                         ?nr1 a era:NetRelation;
-                            era:elementA ?solne;
-                            era:elementB ?opne;
-                            era:navigability ?navAB.
+                                era:elementA ?solne;
+                                era:elementB ?opne;
+                                era:navigability ?navAB.
                     }
                     UNION
                     {
                         ?nr2 a era:NetRelation;
-                            era:elementA ?opne;
-                            era:elementB ?solne;
-                            era:navigability ?navBA.
+                                era:elementA ?opne;
+                                era:elementB ?solne;
+                                era:navigability ?navBA.
                     }
                     
                     FILTER(?long >= ${lon1} && ?long <= ${lon2})
