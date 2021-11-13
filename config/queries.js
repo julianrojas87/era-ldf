@@ -173,7 +173,10 @@ export const abstractionTiles = {
             PREFIX geosparql: <http://www.opengis.net/ont/geosparql#>
             PREFIX era-nv: <http://data.europa.eu/949/concepts/navigabilities/>
             CONSTRUCT {
-                ?solne era:linkedTo ?opne.
+                ?solne era:length ?length;
+                    era:lineNationalId ?line;
+                    era:partOf ?solMesoNe;
+                    era:linkedTo ?opne.
                 ?opne geosparql:asWKT ?wkt;
                     era:partOf ?outMesoNe.
             } WHERE {        
@@ -192,9 +195,13 @@ export const abstractionTiles = {
                         era:hasImplementation ?outOP.
                 
                 ?sol a era:SectionOfLine;
-                    era:hasAbstraction [ era:elementPart ?solne ];
+                    era:length ?length;
+                    era:lineNationalId ?line;
+                    era:hasAbstraction ?solMesoNe;
                     era:opStart|era:opEnd ?inOP;
                     era:opEnd|era:opStart ?outOP.
+                
+                ?solMesoNe era:elementPart ?solne.
                 
                 VALUES ?navAB { era-nv:AB era-nv:Both }
                 VALUES ?navBA { era-nv:BA era-nv:Both }
