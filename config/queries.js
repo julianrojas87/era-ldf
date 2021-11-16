@@ -13,17 +13,13 @@ export const implementationTiles = {
             PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
             CONSTRUCT {
                 ?op ?opp ?opo.
-                ?impl era:elementPart ?ne.
                 ?l ?lp ?lo.
                 ?li ?lip ?lio.
             } WHERE {
                 ?op a era:OperationalPoint;
                     wgs:location ?l;
                     era:lineReference ?li;
-                    era:hasAbstraction ?impl;
                     ?opp ?opo.
-                
-                ?impl era:elementPart ?ne.
 
                 ?l wgs:lat ?lat;
                     wgs:long ?long;
@@ -54,6 +50,28 @@ export const implementationTiles = {
 
                 ?op a era:OperationalPoint;
                     wgs:location ?l.
+
+                ?l wgs:lat ?lat;
+                    wgs:long ?long.
+                
+                FILTER(?long >= ${lon1} && ?long <= ${lon2})
+                FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
+            }
+        `;
+        },
+        (lat1, lon1, lat2, lon2) => {
+            // Query for aggregation triples of elements within Operational Points in given bbox
+            return `
+            PREFIX era: <http://data.europa.eu/949/>
+            PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+            CONSTRUCT {
+                ?impl era:elementPart ?ne.
+            } WHERE {
+                ?op a era:OperationalPoint;
+                    wgs:location ?l;
+                    era:hasAbstraction ?impl.
+
+                ?impl era:elementPart ?ne.
 
                 ?l wgs:lat ?lat;
                     wgs:long ?long.
