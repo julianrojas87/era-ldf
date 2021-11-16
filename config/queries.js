@@ -13,14 +13,18 @@ export const implementationTiles = {
             PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
             CONSTRUCT {
                 ?op ?opp ?opo.
+                ?impl era:elementPart ?ne.
                 ?l ?lp ?lo.
                 ?li ?lip ?lio.
             } WHERE {
                 ?op a era:OperationalPoint;
                     wgs:location ?l;
                     era:lineReference ?li;
+                    era:hasAbstraction ?impl;
                     ?opp ?opo.
                 
+                ?impl era:elementPart ?ne.
+
                 ?l wgs:lat ?lat;
                     wgs:long ?long;
                     ?lp ?lo.
