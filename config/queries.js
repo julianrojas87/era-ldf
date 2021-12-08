@@ -6,7 +6,7 @@
 export const implementationTiles = {
     accept: 'application/n-triples',
     queries: [
-        (lat1, lon1, lat2, lon2) => {
+        filter => {
             // Query for all operational points and their location in given bbox
             return `
             PREFIX era: <http://data.europa.eu/949/>
@@ -27,12 +27,11 @@ export const implementationTiles = {
 
                 ?li ?lip ?lio.
                 
-                FILTER(?long >= ${lon1} && ?long <= ${lon2})
-                FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
+                ${filter}
             }
         `;
         },
-        (lat1, lon1, lat2, lon2) => {
+        filter => {
             // Query for all SoLs and Tracks in given bbox
             return `
             PREFIX era: <http://data.europa.eu/949/>
@@ -54,12 +53,11 @@ export const implementationTiles = {
                 ?l wgs:lat ?lat;
                     wgs:long ?long.
                 
-                FILTER(?long >= ${lon1} && ?long <= ${lon2})
-                FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
+                ${filter}
             }
         `;
         },
-        (lat1, lon1, lat2, lon2) => {
+        filter => {
             // Query for aggregation triples of elements within Operational Points in given bbox
             return `
             PREFIX era: <http://data.europa.eu/949/>
@@ -76,8 +74,7 @@ export const implementationTiles = {
                 ?l wgs:lat ?lat;
                     wgs:long ?long.
                 
-                FILTER(?long >= ${lon1} && ?long <= ${lon2})
-                FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
+                ${filter}
             }
         `;
         }
