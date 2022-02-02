@@ -40,13 +40,27 @@ export const implementationTiles = {
             CONSTRUCT {
                 ?sol ?solp ?solo.
                 ?track ?trackp ?tracko.
+                ?cls ?clsp ?clso.
+                ?tds ?tdsp ?tdso.
             } WHERE {
                 ?sol a era:SectionOfLine;
                     era:opStart ?op;
                     era:track ?track;
                     ?solp ?solo.
 
-                ?track ?trackp ?tracko.
+                {
+                    ?track ?trackp ?tracko.
+                }
+                UNION
+                {
+                    ?track era:contactLineSystem ?cls.
+                    ?cls ?clsp ?clso.
+                }
+                UNION
+                {
+                    ?track era:trainDetectionSystem ?tds.
+                    ?tds ?tdsp ?tdso.
+                }
 
                 ?op a era:OperationalPoint;
                     wgs:location ?l.
