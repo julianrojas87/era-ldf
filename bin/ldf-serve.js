@@ -10,8 +10,6 @@ import { vehicles } from '../lib/routes/vehicles.js';
 import { search } from '../lib/routes/search.js';
 import { count } from '../lib/routes/count.js';
 import { operationalPoints } from '../lib/routes/operationalPoints.js';
-import { osrm } from '../lib/routes/osrm.js';
-import { routeInfo } from '../lib/routes/routeInfo.js';
 import { config } from '../config/config.js'; 
 
 const server = fastify({ logger: false });
@@ -22,8 +20,6 @@ server.register(vehicles);
 server.register(operationalPoints);
 server.register(search);
 server.register(count);
-server.register(osrm);
-server.register(routeInfo);
 
 server.listen(config.port, '0.0.0.0', (err, address) => {
     if (err) {

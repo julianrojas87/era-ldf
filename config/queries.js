@@ -6,7 +6,7 @@
 export const implementationTiles = {
     accept: 'application/n-triples',
     queries: [
-        filter => {
+        (lat1, lon1, lat2, lon2) => {
             // Query for all operational points and their location in given bbox
             return `
             PREFIX era: <http://data.europa.eu/949/>
@@ -27,11 +27,12 @@ export const implementationTiles = {
 
                 ?li ?lip ?lio.
                 
-                ${filter}
+                FILTER(?long >= ${lon1} && ?long <= ${lon2})
+                FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
             }
         `;
         },
-        filter => {
+        (lat1, lon1, lat2, lon2) => {
             // Query for all SoLs and Tracks in given bbox
             return `
             PREFIX era: <http://data.europa.eu/949/>
@@ -39,13 +40,27 @@ export const implementationTiles = {
             CONSTRUCT {
                 ?sol ?solp ?solo.
                 ?track ?trackp ?tracko.
+                ?cls ?clsp ?clso.
+                ?tds ?tdsp ?tdso.
             } WHERE {
                 ?sol a era:SectionOfLine;
                     era:opStart ?op;
                     era:track ?track;
                     ?solp ?solo.
 
-                ?track ?trackp ?tracko.
+                {
+                    ?track ?trackp ?tracko.
+                }
+                UNION
+                {
+                    ?track era:contactLineSystem ?cls.
+                    ?cls ?clsp ?clso.
+                }
+                UNION
+                {
+                    ?track era:trainDetectionSystem ?tds.
+                    ?tds ?tdsp ?tdso.
+                }
 
                 ?op a era:OperationalPoint;
                     wgs:location ?l.
@@ -53,11 +68,12 @@ export const implementationTiles = {
                 ?l wgs:lat ?lat;
                     wgs:long ?long.
                 
-                ${filter}
+                FILTER(?long >= ${lon1} && ?long <= ${lon2})
+                FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
             }
         `;
         },
-        filter => {
+        (lat1, lon1, lat2, lon2) => {
             // Query for aggregation triples of elements within Operational Points in given bbox
             return `
             PREFIX era: <http://data.europa.eu/949/>
@@ -74,7 +90,8 @@ export const implementationTiles = {
                 ?l wgs:lat ?lat;
                     wgs:long ?long.
                 
-                ${filter}
+                FILTER(?long >= ${lon1} && ?long <= ${lon2})
+                FILTER(?lat <= ${lat1} && ?lat >= ${lat2})
             }
         `;
         }
