@@ -13,8 +13,10 @@ export const config = {
     sparqlTileBaseURI: '${TILE_BASE_URI}',
     //sparqlTileBaseURI: 'http://era.ilabt.imec.be/ldf/sparql-tiles', // GraphDB
     //sparqlTileBaseURI: 'https://data-interop.era.europa.eu/ldf/sparql-tiles', // Virtuoso
-    osrmEngine: 'http://10.2.32.114:5000',
-    osrmIdMap: '/home/julian/code/tests/osrm-data/era2osm_map_full.json',
+    osrmEngine: '${OSRM_ENGINE}',
+    //osrmEngine: 'https://era.cymo.eu/era2osm',
+    osrmIdMap: '${OSRM_ID_MAP}',
+    //osrmIdMap: 'https://era.cymo.eu/era2osm/map',
     concurrentQueries: true,
     responseHeaders: {
         'Access-Control-Allow-Origin': '*',

@@ -10,22 +10,32 @@ export const implementationTiles = {
             // Query for all operational points and their location in given bbox
             return `
             PREFIX era: <http://data.europa.eu/949/>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
             PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
             CONSTRUCT {
-                ?op ?opp ?opo.
+                ?op a era:OperationalPoint;
+                    rdfs:label ?label;
+                    era:uopid ?uopid;
+                    era:tafTAPCode ?ttcode;
+                    era:opType ?optype;
+                    era:inCountry ?country;
+                    era:hasAbstraction ?abs;
+                    wgs:location ?l.
                 ?l ?lp ?lo.
-                ?li ?lip ?lio.
             } WHERE {
                 ?op a era:OperationalPoint;
-                    wgs:location ?l;
-                    era:lineReference ?li;
-                    ?opp ?opo.
+                    rdfs:label ?label;
+                    era:uopid ?uopid;
+                    era:opType ?optype;
+                    era:inCountry ?country;
+                    era:hasAbstraction ?abs;
+                    wgs:location ?l.
+                
+                OPTIONAL {?op era:tafTAPCode ?ttcode}
 
                 ?l wgs:lat ?lat;
-                    wgs:long ?long;
-                    ?lp ?lo.
-
-                ?li ?lip ?lio.
+                wgs:long ?long;
+                ?lp ?lo.
                 
                 ${filter}
             }
@@ -36,22 +46,77 @@ export const implementationTiles = {
             return `
             PREFIX era: <http://data.europa.eu/949/>
             PREFIX wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
             CONSTRUCT {
-                ?sol ?solp ?solo.
-                ?track ?trackp ?tracko.
+                ?track rdfs:label ?label;
+                    era:trackId ?tid;
+                    era:hasAbstraction ?tne;
+                    era:gaugingProfile ?gprof;
+                    era:trainDetectionSystem ?tds;
+                    era:hasHotAxleBoxDetector ?habd;
+                    era:railInclination ?ri;
+                    era:wheelSetGauge ?wsg;
+                    era:minimumWheelDiameter ?mwd;
+                    era:minimumHorizontalRadius ?mhr;
+                    era:minimumTemperature ?mintemp;
+                    era:maximumTemperature ?maxtemp;
+                    era:contactLineSystem ?cls;
+                    era:minimumContactWireHeight ?mincwh;
+                    era:maximumContactWireHeight ?maxcwh;
+                    era:contactStripMaterial ?ctm;
+                    era:isQuietRoute ?qr.
+                ?cls era:contactLineSystemType ?clst; 
+                    era:energySupplySystem ?ess;
+                    era:maxCurrentStandstillPantograph ?maxcsp.
+                ?tds era:trainDetectionSystemType ?tdst.
             } WHERE {
                 ?sol a era:SectionOfLine;
                     era:opStart ?op;
-                    era:track ?track;
-                    ?solp ?solo.
+                    era:track ?track.
 
-                ?track ?trackp ?tracko.
+                {
+                    ?track a era:Track;
+                        rdfs:label ?label;
+                        era:trackId ?tid;
+                        era:hasAbstraction ?tne.
+                } 
+                UNION {?track era:gaugingProfile ?gprof}
+                UNION {?track era:hasHotAxleBoxDetector ?habd}
+                UNION {?track era:railInclination ?ri}
+                UNION {?track era:wheelSetGauge ?wsg}
+                UNION {?track era:minimumWheelDiameter ?mwd}
+                UNION {?track era:minimumHorizontalRadius ?mhr}
+                UNION {?track era:minimumTemperature ?mintemp}
+                UNION {?track era:maximumTemperature ?maxtemp}
+                UNION {?track era:minimumContactWireHeight ?mincwh}
+                UNION {?track era:maximumContactWireHeight ?maxcwh}
+                UNION {?track era:contactStripMaterial ?ctm}
+                UNION {?track era:isQuietRoute ?qr}
+                UNION {?track era:contactLineSystem ?cls}
+                UNION {
+                    ?track era:contactLineSystem ?cls.
+                    ?cls era:contactLineSystemType ?clst.
+                }
+                UNION {
+                    ?track era:contactLineSystem ?cls.
+                    ?cls era:energySupplySystem ?ess.
+                }
+                UNION {
+                    ?track era:contactLineSystem ?cls.
+                    ?cls era:maxCurrentStandstillPantograph ?maxcsp.
+                }
+                UNION {?track era:trainDetectionSystem ?tds}
+                UNION
+                {
+                    ?track era:trainDetectionSystem ?tds.
+                    ?tds era:trainDetectionSystemType ?tdst.
+                }
 
                 ?op a era:OperationalPoint;
                     wgs:location ?l.
 
                 ?l wgs:lat ?lat;
-                    wgs:long ?long.
+                wgs:long ?long.
                 
                 ${filter}
             }

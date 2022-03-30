@@ -10,10 +10,12 @@ services:
     build: ./
     ports:
       - "${ERA_LDF_PORT}:3000"
-    restart: unless-stopped
+    restart: on-failure
     environment: 
       - BASE_URL_PATH=${BASE_URL_PATH}
       - SPARQL_ENDPOINT=${SPARQL_ENDPOINT}
       - TILE_BASE_URI=${TILE_BASE_URI}
       - CACHE_MAX_AGE=${CACHE_MAX_AGE}
       - ERA_NAMED_GRAPH=${ERA_NAMED_GRAPH}
+      - OSRM_ENGINE=${OSRM_ENGINE}
+      - OSRM_ID_MAP=${OSRM_ID_MAP}

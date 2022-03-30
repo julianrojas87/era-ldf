@@ -14,7 +14,7 @@ import { osrm } from '../lib/routes/osrm.js';
 import { routeInfo } from '../lib/routes/routeInfo.js';
 import { config } from '../config/config.js'; 
 
-const server = fastify({ logger: false });
+const server = fastify({ logger: true, pluginTimeout: 60000 });
 
 server.register(preflight);
 server.register(sparqlTiles);
